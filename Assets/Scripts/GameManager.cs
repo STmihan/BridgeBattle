@@ -11,9 +11,12 @@ public class GameManager : MonoBehaviour
     public int HpEnemy;
     public int Score;
     public int HighScore;
+    [Space] public GameObject StartUI;
 
     private void Start()
     {
+        Time.timeScale = 0;
+        StartUI.SetActive(true);
         Load();
     }
 
