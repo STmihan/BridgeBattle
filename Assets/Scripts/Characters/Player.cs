@@ -5,13 +5,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public enum FightState
-    {
-        Idle,
-        Fight,
-        Death
-    }
-
     #region Fields
     public int maxHp;
     public int attackSpeed;
@@ -20,7 +13,7 @@ public class Player : MonoBehaviour
     [Space] [SerializeField] private Material hitEffectMaterial;
     [HideInInspector] public int Hp;
     [HideInInspector] public Enemy Enemy;
-    [HideInInspector] public FightState _fightState;
+    [HideInInspector] public PlayerState PlayerState;
 
     private Material _origMaterial;
     private MeshRenderer _meshRenderer;
@@ -30,31 +23,31 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Hp = maxHp;
-        _fightState = FightState.Idle;
+        PlayerState = PlayerState.Idle;
         _meshRenderer = GetComponent<MeshRenderer>();
         _origMaterial = _meshRenderer.material;
     }
 
     private void Update()
     {
-        SwitchState(_fightState);
+        SwitchState(PlayerState);
         if(Hp <= 0 ) Destroy(gameObject);
     }
     #endregion
     
-    private void SwitchState(FightState state)
+    private void SwitchState(PlayerState state)
     {
         switch (state)
         {
-            case FightState.Idle:
+            case PlayerState.Idle:
                 Attack(false);
                 // Block();
                     break;
-            case FightState.Fight:
+            case PlayerState.Fight:
                 Attack(true);
                 // Block();
                     break;
-            case FightState.Death:
+            case PlayerState.Death:
                 // OnDeath();
                 break;
         }
@@ -68,21 +61,26 @@ public class Player : MonoBehaviour
     }
     
     #region Input methods
+    float nextFireTime = 0f;
     private void Attack(bool isFight)
     {
-        if (isFight)
+        if (Time.time > nextFireTime)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (isFight)
             {
-                //anim hit
-                Enemy.TakeDamage(damage);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    //anim hit
+                    StartCoroutine(Enemy.TakeDamage(damage));
+                    nextFireTime = Time.time + 1f/attackSpeed;
+                }
             }
-        }
-        else
-        {
-            if (Input.GetMouseButtonDown(0))
+            else
             {
-                //anim hit
+                if (Input.GetMouseButtonDown(0))
+                {
+                    //anim hit
+                }
             }
         }
     }

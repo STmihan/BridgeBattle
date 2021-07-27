@@ -1,17 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private GameObject Enemy;
+    private Player _player;
 
-    void Start()
+    private void Start()
     {
-        
+        Spawn();
     }
 
-    void Update()
+    public void Spawn()
     {
-        
+        Instantiate(Enemy, transform.position, Quaternion.identity);
     }
 }

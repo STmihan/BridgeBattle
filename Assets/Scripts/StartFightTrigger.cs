@@ -15,6 +15,6 @@ public class StartFightTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Player.Enemy = other.gameObject.GetComponent<Enemy>();
-        Player._fightState = Player.FightState.Fight;
+        Player.PlayerState = PlayerState.Fight;
     }
 }
