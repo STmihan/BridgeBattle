@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8675733841438098860}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,4 +129,5 @@ MonoBehaviour:
   maxHp: 200
   attackSpeed: 2
   spawnSpeed: 10
+  _hp: 0
   hitEffectMaterial: {fileID: 2100000, guid: d1f1e6e165a0d254691e4c4e57a7707a, type: 2}

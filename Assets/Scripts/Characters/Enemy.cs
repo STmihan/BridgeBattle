@@ -61,6 +61,7 @@ public class Enemy : MonoBehaviour
         if (_hp <= 0)
         {
             Destroy(gameObject);
+            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().ScoreUp();
             yield return new WaitForSeconds(1);
             _spawner.Spawn();
         } 

@@ -10,13 +10,15 @@ public class Player : MonoBehaviour
     public int attackSpeed;
     public int damage;
 
-    [Space] [SerializeField] private Material hitEffectMaterial;
+    [Space]
+    [SerializeField] private Material hitEffectMaterial;
+    [SerializeField] private GameObject Shield;
+    
     [HideInInspector] public int Hp;
     [HideInInspector] public Enemy Enemy;
     [HideInInspector] public PlayerState PlayerState;
-
-    private Material _origMaterial;
-    private MeshRenderer _meshRenderer;
+    
+    private bool isBlocking;
     #endregion
     
     #region Unity methods
@@ -24,14 +26,12 @@ public class Player : MonoBehaviour
     {
         Hp = maxHp;
         PlayerState = PlayerState.Idle;
-        _meshRenderer = GetComponent<MeshRenderer>();
-        _origMaterial = _meshRenderer.material;
     }
 
     private void Update()
     {
         SwitchState(PlayerState);
-        if(Hp <= 0 ) Destroy(gameObject);
+        if (Hp <= 0 ) Destroy(gameObject);
     }
     #endregion
     
@@ -41,11 +41,11 @@ public class Player : MonoBehaviour
         {
             case PlayerState.Idle:
                 Attack(false);
-                // Block();
+                Block();
                     break;
             case PlayerState.Fight:
                 Attack(true);
-                // Block();
+                Block();
                     break;
             case PlayerState.Death:
                 // OnDeath();
@@ -53,8 +53,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    private IEnumerator HitEffect()
+    private IEnumerator HitEffect(GameObject target)
     {
+        var _meshRenderer = target.GetComponent<MeshRenderer>();
+        var _origMaterial = _meshRenderer.material;
         _meshRenderer.material = hitEffectMaterial;
         yield return new WaitForSeconds(.1f);
         _meshRenderer.material = _origMaterial;
@@ -64,7 +66,7 @@ public class Player : MonoBehaviour
     float nextFireTime = 0f;
     private void Attack(bool isFight)
     {
-        if (Time.time > nextFireTime)
+        if (Time.time > nextFireTime && !isBlocking)
         {
             if (isFight)
             {
@@ -84,13 +86,35 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    private void Block()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            isBlocking = true;
+            Shield.SetActive(true);
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            isBlocking = false;
+            Shield.SetActive(false);
+        }
+    }
     #endregion
 
     #region Public methods
     public void TakeDamage(int dmg)
     {
-        Hp -= dmg;
-        StartCoroutine(HitEffect());
+        if (isBlocking)
+        {
+            StartCoroutine(HitEffect(Shield));
+        }
+        else
+        {
+            Hp -= dmg;
+            StartCoroutine(HitEffect(gameObject));
+        }
     }
     #endregion
 }
