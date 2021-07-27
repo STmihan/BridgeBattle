@@ -18,16 +18,7 @@ public class Player : MonoBehaviour
     public int damage;
 
     [Space] [SerializeField] private Material hitEffectMaterial;
-    [HideInInspector] public int Hp
-    {
-        set
-        {
-            if (value < 0) value = 0;
-            if (value > maxHp) value = maxHp;
-        }
-        get { return Hp; }
-    }
-
+    [HideInInspector] public int Hp;
     [HideInInspector] public Enemy Enemy;
     [HideInInspector] public FightState _fightState;
 
