@@ -24,9 +24,9 @@ public class Enemy : MonoBehaviour
     private Animator _animator;
     private Rigidbody _rigidbody;
 
-    private Player _player;
+    public Player _player;
 
-    private EnemyState _enemyState;
+    public EnemyState _enemyState;
 
     public void Start()
     {
@@ -45,6 +45,10 @@ public class Enemy : MonoBehaviour
         if (transform.position.z < _fightPossition.position.z)
         {
             _rigidbody.MovePosition(transform.position + Vector3.forward * (spawnSpeed * Time.fixedDeltaTime));
+        }
+        else
+        {
+            _enemyState = EnemyState.Fight;
         }
     }
 
@@ -72,7 +76,6 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(attackSpeed);
         while (_player.Hp > 0)
         {
-            _player.TakeDamage(damage);
             yield return new WaitForSeconds(attackSpeed);
         }
     }

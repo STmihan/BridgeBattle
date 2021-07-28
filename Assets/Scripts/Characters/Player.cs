@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private Material hitEffectMaterial;
     [SerializeField] private GameObject Shield;
-    
+    private Animator _animator;
+
     [HideInInspector] public int Hp;
     [HideInInspector] public Enemy Enemy;
     [HideInInspector] public PlayerState PlayerState;
@@ -72,8 +73,7 @@ public class Player : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    //anim hit
-                    StartCoroutine(Enemy.TakeDamage(damage));
+                    _animator.SetTrigger("AttackTrigger");
                     nextFireTime = Time.time + 1f/attackSpeed;
                 }
             }
@@ -81,7 +81,8 @@ public class Player : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    //anim hit
+                    _animator.SetTrigger("AttackTrigger");
+                    nextFireTime = Time.time + 1f/attackSpeed;
                 }
             }
         }
