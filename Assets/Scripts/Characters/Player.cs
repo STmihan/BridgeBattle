@@ -13,13 +13,14 @@ public class Player : MonoBehaviour
 
     [Space]
     [SerializeField] private Material hitEffectMaterial;
-    [SerializeField] private GameObject Shield;
+    [SerializeField] private GameObject shield;
+    [SerializeField] private GameObject main;
     
     [Space]
     public Animator PlayerAnimator;
     public Animator ShieldAnimator;
 
-    public int Hp { get; private set; }
+    public int Hp;
     public PlayerState PlayerState { get; set; }
     
     private bool isBlocking;
@@ -39,7 +40,7 @@ public class Player : MonoBehaviour
     }
     #endregion
     
-
+    
     
     #region Input methods
     float nextFireTime = 0f;
@@ -63,14 +64,14 @@ public class Player : MonoBehaviour
     public void BlockDown()
     {
         isBlocking = true;
-        Shield.SetActive(true);
+        main.SetActive(true);
     }
     
 
     public void BlockUp()
     {
             isBlocking = false;
-            Shield.SetActive(false);
+            main.SetActive(false);
     }
     #endregion
 
@@ -90,12 +91,12 @@ public class Player : MonoBehaviour
     {
         if (isBlocking)
         {
-            StartCoroutine(HitEffect(Shield));
+            StartCoroutine(HitEffect(shield));
         }
         else
         {
             Hp -= dmg;
-            StartCoroutine(HitEffect(gameObject));
+            StartCoroutine(HitEffect(main));
         }
     }
     #endregion

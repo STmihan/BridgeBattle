@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.SqlServer.Server;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     public int maxHp;
-    public float attackSpeed;
+    public float attackSpeed; // 1-4.5
     public int damage;
-    public float spawnSpeed;
+    public float spawnSpeed; 
     
     public int Hp { get; set; }
     
@@ -45,20 +46,18 @@ public class Enemy : MonoBehaviour
         {
             _enemyState = EnemyState.Fight;
         }
+        _animator.SetFloat("AttackSpeed", attackSpeed);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         StartCoroutine(Attack());
     }
     
     private IEnumerator Attack()
     {
-        yield return new WaitForSeconds(attackSpeed);
-        while (GameManager.Player.GetComponent<Player>().Hp > 0)
-        {
-            yield return new WaitForSeconds(attackSpeed);
-        }
+        yield return new WaitForSeconds(1f/attackSpeed);
+        _animator.SetTrigger("AttackTrigger");
     }
 
     #region Hit effect

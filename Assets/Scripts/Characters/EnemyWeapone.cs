@@ -16,8 +16,9 @@ public class EnemyWeapone : MonoBehaviour
     {
         var player = GameManager.Player.GetComponent<Player>();
         var enemy = GameManager.Enemy.GetComponent<Enemy>();
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerTrigger"))
         {
+            Debug.Log("Enemy attacked");
             player.TakeDamage(enemy.damage);
         }
     }

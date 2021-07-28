@@ -8,6 +8,8 @@ TagManager:
   - FightPosition
   - Spawner
   - GameManager
+  - EnemyTrigger
+  - PlayerTrigger
   layers:
   - Default
   - TransparentFX
