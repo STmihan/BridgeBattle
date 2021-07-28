@@ -5,16 +5,15 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private GameObject Enemy;
-    private Player _player;
+    public GameObject[] Enemy;
 
     private void Start()
     {
-        Spawn();
+        Spawn(0);
     }
 
-    public void Spawn()
+    public void Spawn(int enemyType)
     {
-        Instantiate(Enemy, transform.position, Quaternion.identity);
+        Instantiate(Enemy[enemyType], transform.position, Quaternion.identity);
     }
 }

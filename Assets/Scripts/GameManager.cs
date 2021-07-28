@@ -11,18 +11,30 @@ public class GameManager : MonoBehaviour
     public int HpEnemy;
     public int Score;
     public int HighScore;
-    [Space] public GameObject StartUI;
+    
+    [Space]
+    public GameObject StartUI;
+    public GameObject Player;
+    public GameObject Spawner;
+    public GameObject StartFightTrigger;
+
+    public GameObject Enemy;
+    
 
     private void Start()
     {
         Time.timeScale = 0;
         StartUI.SetActive(true);
         Load();
+        Player = GameObject.FindWithTag("Player");
+        Spawner = GameObject.FindWithTag("Spawner");
+        StartFightTrigger = GameObject.FindWithTag("FightPosition");
     }
 
     private void Update()
     {
         if (HighScore < Score) HighScore=Score;
+        Enemy = GameObject.FindWithTag("Enemy");
     }
 
     public void ScoreUp()
@@ -42,8 +54,8 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        Player enemy = GameObject.FindWithTag("Enemy").GetComponent<Player>();
+        Player player = Player.GetComponent<Player>();
+        Enemy enemy = Enemy.GetComponent<Enemy>();
         MaxHpPlayer = player.maxHp;
         HpPlayer = player.maxHp;
         MaxHpEnemy = enemy.maxHp;

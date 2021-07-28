@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region Fields
+
     public int maxHp;
     public int attackSpeed;
     public int damage;
@@ -13,11 +14,13 @@ public class Player : MonoBehaviour
     [Space]
     [SerializeField] private Material hitEffectMaterial;
     [SerializeField] private GameObject Shield;
-    private Animator _animator;
+    
+    [Space]
+    public Animator PlayerAnimator;
+    public Animator ShieldAnimator;
 
-    [HideInInspector] public int Hp;
-    [HideInInspector] public Enemy Enemy;
-    [HideInInspector] public PlayerState PlayerState;
+    public int Hp { get; private set; }
+    public PlayerState PlayerState { get; set; }
     
     private bool isBlocking;
     #endregion
@@ -31,29 +34,49 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        SwitchState(PlayerState);
+        PlayerAnimator.SetFloat("AttackSpeed", attackSpeed);
         if (Hp <= 0 ) Destroy(gameObject);
     }
     #endregion
     
-    private void SwitchState(PlayerState state)
+
+    
+    #region Input methods
+    float nextFireTime = 0f;
+    public void Attack()
     {
-        switch (state)
+        if (Time.time > nextFireTime && !isBlocking)
         {
-            case PlayerState.Idle:
-                Attack(false);
-                Block();
-                    break;
-            case PlayerState.Fight:
-                Attack(true);
-                Block();
-                    break;
-            case PlayerState.Death:
-                // OnDeath();
-                break;
+            if (PlayerState == PlayerState.Fight)
+            {
+                PlayerAnimator.SetTrigger("AttackTrigger");
+                    nextFireTime = Time.time + 1f/attackSpeed;
+            }
+            else
+            {
+                PlayerAnimator.SetTrigger("AttackTrigger");
+                nextFireTime = Time.time + 1f/attackSpeed;
+            }
         }
     }
 
+    public void BlockDown()
+    {
+        isBlocking = true;
+        Shield.SetActive(true);
+    }
+    
+
+    public void BlockUp()
+    {
+            isBlocking = false;
+            Shield.SetActive(false);
+    }
+    #endregion
+
+    
+    
+    #region Hit Effect
     private IEnumerator HitEffect(GameObject target)
     {
         var _meshRenderer = target.GetComponent<MeshRenderer>();
@@ -62,49 +85,7 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(.1f);
         _meshRenderer.material = _origMaterial;
     }
-    
-    #region Input methods
-    float nextFireTime = 0f;
-    private void Attack(bool isFight)
-    {
-        if (Time.time > nextFireTime && !isBlocking)
-        {
-            if (isFight)
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    _animator.SetTrigger("AttackTrigger");
-                    nextFireTime = Time.time + 1f/attackSpeed;
-                }
-            }
-            else
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    _animator.SetTrigger("AttackTrigger");
-                    nextFireTime = Time.time + 1f/attackSpeed;
-                }
-            }
-        }
-    }
 
-    private void Block()
-    {
-        if (Input.GetMouseButtonDown(1))
-        {
-            isBlocking = true;
-            Shield.SetActive(true);
-        }
-
-        if (Input.GetMouseButtonUp(1))
-        {
-            isBlocking = false;
-            Shield.SetActive(false);
-        }
-    }
-    #endregion
-
-    #region Public methods
     public void TakeDamage(int dmg)
     {
         if (isBlocking)

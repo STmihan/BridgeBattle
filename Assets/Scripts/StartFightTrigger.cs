@@ -6,15 +6,16 @@ using UnityEngine;
 public class StartFightTrigger : MonoBehaviour
 {
 
-    public Player Player;
-    void Start()
+    public GameManager GameManager;
+
+    private void Start()
     {
-        Player = Player.GetComponent<Player>();
+        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Player.Enemy = other.gameObject.GetComponent<Enemy>();
-        Player.PlayerState = PlayerState.Fight;
+        if (other.CompareTag("Enemy"))
+            GameManager.Player.GetComponent<Player>().PlayerState = PlayerState.Fight;
     }
 }

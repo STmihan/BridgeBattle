@@ -33,29 +33,33 @@ public class UI : MonoBehaviour
     public GameObject PauseUI;
 
     private bool isPause = false;
-    private GameManager _gameManager;
+    public GameManager GameManager;
     #endregion
+    
+    void Start()
+    {
+        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+    }
 
     private void Update()
     {
-        GameOverScore.text = _gameManager.Score.ToString();
-        HighScore.text = _gameManager.HighScore.ToString();
-        GameScore.text = _gameManager.Score.ToString();
+        GameOverScore.text = GameManager.Score.ToString();
+        HighScore.text = GameManager.HighScore.ToString();
+        GameScore.text = GameManager.Score.ToString();
     }
 
-    void Start()
+
+    public void OnDefendDown()
     {
-        _gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        GameManager.Player.GetComponent<Player>().BlockDown();
     }
-
-    public void OnDefend()
+    public void OnDefendUp()
     {
-        
+        GameManager.Player.GetComponent<Player>().BlockUp();
     }
-
     public void OnAttack()
     {
-        
+        GameManager.Player.GetComponent<Player>().Attack();
     }
 
     public void OnPause()
@@ -69,7 +73,7 @@ public class UI : MonoBehaviour
     public void OnRestart()
     {
         SceneManager.LoadScene(0);
-        _gameManager.Restart();
+        GameManager.Restart();
     }
 
     public void OnMenu()

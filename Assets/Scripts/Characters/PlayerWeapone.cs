@@ -5,19 +5,20 @@ using UnityEngine;
 
 public class PlayerWeapone : MonoBehaviour
 {
-    public GameObject GameObject;
-    private Player player;
+    public GameManager GameManager;
 
     private void Start()
     {
-        player = GameObject.GetComponent<Player>();
+        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") && player.PlayerState == PlayerState.Fight)
+        var player = GameManager.Player.GetComponent<Player>();
+        var enemy = GameManager.Enemy.GetComponent<Enemy>();
+        if (other.CompareTag("EnemyTrigger") && player.PlayerState == PlayerState.Fight)
         {
-            StartCoroutine(player.Enemy.TakeDamage(player.damage));
+            StartCoroutine(enemy.TakeDamage(player.damage));
         }
     }
 }
