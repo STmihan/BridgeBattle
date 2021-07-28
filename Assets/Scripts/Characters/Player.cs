@@ -7,9 +7,9 @@ public class Player : MonoBehaviour
 {
     #region Fields
 
-    public int maxHp;
-    public int attackSpeed;
-    public int damage;
+    public int maxHp { get; set; }
+    public float attackSpeed { get; set; }
+    public int damage { get; set; }
 
     [Space]
     [SerializeField] private Material hitEffectMaterial;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     public Animator PlayerAnimator;
     public Animator ShieldAnimator;
 
-    public int Hp;
+    private int Hp;
     public PlayerState PlayerState { get; set; }
     
     private bool isBlocking;
@@ -64,14 +64,14 @@ public class Player : MonoBehaviour
     public void BlockDown()
     {
         isBlocking = true;
-        main.SetActive(true);
+        shield.SetActive(true);
     }
     
 
     public void BlockUp()
     {
-            isBlocking = false;
-            main.SetActive(false);
+        isBlocking = false;
+        shield.SetActive(false);
     }
     #endregion
 

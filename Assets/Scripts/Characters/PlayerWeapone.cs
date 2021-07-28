@@ -18,7 +18,7 @@ public class PlayerWeapone : MonoBehaviour
         var enemy = GameManager.Enemy.GetComponent<Enemy>();
         if (other.CompareTag("EnemyTrigger") && player.PlayerState == PlayerState.Fight)
         {
-            StartCoroutine(enemy.TakeDamage(player.damage));
+            enemy.TakeDamage(player.damage);
         }
     }
 }

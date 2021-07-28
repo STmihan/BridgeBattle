@@ -9,9 +9,9 @@ public class Enemy : MonoBehaviour
     public int maxHp;
     public float attackSpeed; // 1-4.5
     public int damage;
-    public float spawnSpeed; 
-    
-    public int Hp { get; set; }
+    public float spawnSpeed;
+
+    public int Hp;
     
     [Space]
     public MeshRenderer _meshRenderer;
@@ -26,14 +26,21 @@ public class Enemy : MonoBehaviour
     
     public EnemyState _enemyState { get; set; }
     private GameManager GameManager;
+    private GameController GameController;
 
     
     public void Start()
     {
+        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        GameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+        
+        maxHp = GameController.maxHpEnemy;
+        attackSpeed = GameController.attackSpeedEnemy;
+        damage = GameController.damageEnemy;
+        
         _origMaterial = _meshRenderer.material;
         Hp = maxHp;
         _enemyState = EnemyState.Spawn;
-        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
     }
 
     private void FixedUpdate()
@@ -51,7 +58,8 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        StartCoroutine(Attack());
+        if(other.CompareTag("FightPosition"))
+            StartCoroutine(Attack());
     }
     
     private IEnumerator Attack()
@@ -69,16 +77,14 @@ public class Enemy : MonoBehaviour
         _meshRenderer.material = _origMaterial;
     }
 
-    public IEnumerator TakeDamage(int dmg)
+    public void TakeDamage(int dmg)
     {
         StartCoroutine(HitEffect());
         Hp -= dmg;
         if (Hp <= 0)
         {
             Destroy(gameObject);
-            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().ScoreUp();
-            yield return new WaitForSeconds(1);
-            GameManager.Spawner.GetComponent<Spawner>().Spawn(0);
+            GameController.onEnemyDeath();
         } 
     }
     #endregion

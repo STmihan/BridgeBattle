@@ -326,7 +326,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 322031722}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: -34}
+  m_LocalPosition: {x: 0, y: 4, z: -54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -488,6 +488,57 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &362490554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 362490556}
+  - component: {fileID: 362490555}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: GameController
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &362490555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362490554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e33c75b232ae041abac57239feb565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHpPlayer: 200
+  attackSpeedPlayer: 1
+  damagePlayer: 10
+  maxHpEnemy: 20
+  attackSpeedEnemy: 1
+  damageEnemy: 10
+  spawnSpeedEnemy: 10
+  GameManager: {fileID: 0}
+--- !u!4 &362490556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362490554}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.3071785, y: 4.0240927, z: 4.7531962}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &389999954
 GameObject:
   m_ObjectHideFlags: 0
@@ -3272,6 +3323,10 @@ PrefabInstance:
       propertyPath: main
       value: 
       objectReference: {fileID: 1851969588}
+    - target: {fileID: 1719146711098906080, guid: 426d8ee370001c14da3d4e80fa4fd001, type: 3}
+      propertyPath: maxHp
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 1719146711098906080, guid: 426d8ee370001c14da3d4e80fa4fd001, type: 3}
       propertyPath: shield
       value: 
