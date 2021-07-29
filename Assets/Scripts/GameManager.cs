@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 
     public void Save()
     {
-        path = Path.Combine(Application.dataPath, "Save.json");
+        path = Path.Combine(Application.persistentDataPath, "Save.json");
         Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
         Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
         sv.MaxHpPlayer = player.maxHp;
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void Load()
     {
-        path = Path.Combine(Application.dataPath, "Save.json");
+        path = Path.Combine(Application.persistentDataPath, "Save.json");
         Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
         Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
         if (File.Exists(path))
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        path = Path.Combine(Application.dataPath, "Save.json");
+        path = Path.Combine(Application.persistentDataPath, "Save.json");
         Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
         Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
         MaxHpPlayer = player.maxHp;
@@ -107,13 +107,12 @@ public class GameManager : MonoBehaviour
         isFight = false;
     }
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-    private void OnApplicationQuit(bool pause)
+    private void OnApplicationPause(bool pauseStatus)
     {
-        if(pause)
+        if(pauseStatus)
             Save();
     }
-#endif
+
     private void OnApplicationQuit()
     {
         Save();
