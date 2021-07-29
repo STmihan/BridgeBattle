@@ -1,15 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [Space][Header("Player")]
-    public int maxHpPlayer;
-    public float attackSpeedPlayer;
-    public int damagePlayer;
-    
     [Space][Header("Enemy")]
     public int maxHpEnemy;
     public float attackSpeedEnemy;
@@ -21,12 +13,6 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-        
-        // Player
-        var player = GameManager.Player.GetComponent<Player>();
-        player.maxHp = maxHpPlayer;
-        player.attackSpeed = attackSpeedPlayer;
-        player.damage = damagePlayer;
     }
 
     int counter = 0;

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -46,9 +43,26 @@ public class UI : MonoBehaviour
         GameOverScore.text = GameManager.Score.ToString();
         HighScore.text = GameManager.HighScore.ToString();
         GameScore.text = GameManager.Score.ToString();
+        if (GameManager.Player.GetComponent<Player>().Hp <= 0 || !GameManager.Player)
+        {
+            GameUI.SetActive(false);
+            GameOverUI.SetActive(true);
+            Time.timeScale = 0;
+        }
+
+        if (GameOverUI.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                GameUI.SetActive(true);
+                GameOverUI.SetActive(false);
+                Time.timeScale = 1f;
+                GameManager.Restart();
+            }
+        }
     }
 
-
+    #region Button methods
     public void OnDefendDown()
     {
         GameManager.Player.GetComponent<Player>().BlockDown();
@@ -68,11 +82,11 @@ public class UI : MonoBehaviour
         GameUI.SetActive(false);
         PauseUI.SetActive(true);
         Time.timeScale = 0f;
+        GameManager.Save();
     }
 
     public void OnRestart()
     {
-        SceneManager.LoadScene(0);
         GameManager.Restart();
     }
 
@@ -92,6 +106,7 @@ public class UI : MonoBehaviour
         StartUI.SetActive(false);
         GameUI.SetActive(true);
         Time.timeScale = 1f;
+        GameManager.Load();
     }
 
     public void OnResume()
@@ -101,4 +116,6 @@ public class UI : MonoBehaviour
         GameUI.SetActive(true);
         Time.timeScale = 1f;
     }
+    #endregion
 }
+

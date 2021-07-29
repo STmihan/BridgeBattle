@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using Microsoft.SqlServer.Server;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -20,15 +18,18 @@ public class Enemy : MonoBehaviour
 
     [Space]
     public Animator _animator;
+    public Rigidbody _rigidbody;
     
     [Space]
-    public Rigidbody _rigidbody;
+    public Image HpBarFillEnemy;
+
     
     public EnemyState _enemyState { get; set; }
     private GameManager GameManager;
     private GameController GameController;
-
     
+
+    #region Unity methods
     public void Start()
     {
         GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
@@ -37,10 +38,15 @@ public class Enemy : MonoBehaviour
         maxHp = GameController.maxHpEnemy;
         attackSpeed = GameController.attackSpeedEnemy;
         damage = GameController.damageEnemy;
+        spawnSpeed = GameController.spawnSpeedEnemy;
         
         _origMaterial = _meshRenderer.material;
         Hp = maxHp;
         _enemyState = EnemyState.Spawn;
+    }
+    private void Update()
+    {
+        HpBarFillEnemy.fillAmount = (float)Hp / (float)maxHp;
     }
 
     private void FixedUpdate()
@@ -61,7 +67,8 @@ public class Enemy : MonoBehaviour
         if(other.CompareTag("FightPosition"))
             StartCoroutine(Attack());
     }
-    
+    #endregion
+
     private IEnumerator Attack()
     {
         yield return new WaitForSeconds(1f/attackSpeed);
@@ -88,5 +95,4 @@ public class Enemy : MonoBehaviour
         } 
     }
     #endregion
-
 }

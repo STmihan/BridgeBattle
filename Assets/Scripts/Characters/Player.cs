@@ -1,15 +1,14 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     #region Fields
 
-    public int maxHp { get; set; }
-    public float attackSpeed { get; set; }
-    public int damage { get; set; }
+    public int maxHp;
+    public float attackSpeed;
+    public int damage;
 
     [Space]
     [SerializeField] private Material hitEffectMaterial;
@@ -19,24 +18,32 @@ public class Player : MonoBehaviour
     [Space]
     public Animator PlayerAnimator;
     public Animator ShieldAnimator;
+    
+    [Space]
+    public Image HpBarFillPlayer;
 
-    private int Hp;
+    public int Hp;
     public PlayerState PlayerState { get; set; }
     
     private bool isBlocking;
     #endregion
     
     #region Unity methods
-    private void Start()
+    private void Awake()
     {
-        Hp = maxHp;
         PlayerState = PlayerState.Idle;
+        Hp = maxHp;
     }
 
     private void Update()
     {
         PlayerAnimator.SetFloat("AttackSpeed", attackSpeed);
-        if (Hp <= 0 ) Destroy(gameObject);
+        if (Hp <= 0)
+        {
+            Destroy(gameObject);
+            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().isFight = false;
+        }
+        HpBarFillPlayer.fillAmount = (float)Hp / (float)maxHp;
     }
     #endregion
     
@@ -50,6 +57,7 @@ public class Player : MonoBehaviour
         {
             if (PlayerState == PlayerState.Fight)
             {
+                GameObject.FindWithTag("GameManager").GetComponent<GameManager>().isFight = true;
                 PlayerAnimator.SetTrigger("AttackTrigger");
                     nextFireTime = Time.time + 1f/attackSpeed;
             }
