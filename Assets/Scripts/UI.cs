@@ -1,11 +1,11 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI : MonoBehaviour
 {
-    #region Fields
-
+    #region Inspector fields
     [Header("Game Over UI")]
     public Text GameOverScore;
     public Text HighScore;
@@ -28,22 +28,20 @@ public class UI : MonoBehaviour
     public GameObject GameUI;
     public GameObject StartUI;
     public GameObject PauseUI;
+    
+    [Space][SerializeField]private GameManager GameManager;
+    #endregion
 
+    #region Private fields
     private bool isPause = false;
-    public GameManager GameManager;
     #endregion
     
-    void Start()
-    {
-        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-    }
-
     private void Update()
     {
         GameOverScore.text = GameManager.Score.ToString();
         HighScore.text = GameManager.HighScore.ToString();
         GameScore.text = GameManager.Score.ToString();
-        if (GameManager.Player.GetComponent<Player>().Hp <= 0 || !GameManager.Player)
+        if (GameManager.Player.Hp <= 0 || !GameManager.Player)
         {
             GameUI.SetActive(false);
             GameOverUI.SetActive(true);
@@ -65,15 +63,15 @@ public class UI : MonoBehaviour
     #region Button methods
     public void OnDefendDown()
     {
-        GameManager.Player.GetComponent<Player>().BlockDown();
+        GameManager.Player.BlockDown();
     }
     public void OnDefendUp()
     {
-        GameManager.Player.GetComponent<Player>().BlockUp();
+        GameManager.Player.BlockUp();
     }
     public void OnAttack()
     {
-        GameManager.Player.GetComponent<Player>().Attack();
+        GameManager.Player.Attack();
     }
 
     public void OnPause()

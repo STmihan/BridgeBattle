@@ -576,9 +576,10 @@ MonoBehaviour:
   attackSpeed: 1
   damage: 20
   spawnSpeed: 10
-  Hp: 0
+  HpEnemy: 0
   _meshRenderer: {fileID: 6147793780527801771}
   hitEffectMaterial: {fileID: 2100000, guid: d1f1e6e165a0d254691e4c4e57a7707a, type: 2}
+  _origMaterial: {fileID: 2100000, guid: c4fefd1234d153948a75c32747ae592c, type: 2}
   _animator: {fileID: 6147793780527801767}
   _rigidbody: {fileID: 6648536394294349935}
   HpBarFillEnemy: {fileID: 1497432421}
@@ -669,7 +670,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8186f2d71d4142b798f48f8d2f208307, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameManager: {fileID: 0}
 --- !u!54 &6562921185398484845
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -5,55 +5,91 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    #region Inspector fields
     public int MaxHpPlayer;
     public int HpPlayer;
     public int MaxHpEnemy;
     public int HpEnemy;
     public int Score;
     public int HighScore;
-    
-    [Space]
-    public GameObject Player;
-    public GameObject Spawner;
     public GameObject StartFightTrigger;
+    #endregion
 
-    public GameObject Enemy;
+    #region Hide in inspector fields
 
-    public bool isFight = false;
+    public Spawner Spawner;
+    public Player Player;
+    public Enemy Enemy;
+    public bool isFight { get; set; }
+    #endregion
+
+    #region next enemy char
+    public int maxHpNextEnemy { get; private set; }
+    public float attackSpeedNextEnemy { get; private set; }
+    public int damageNextEnemy { get; private set; }
     
+    #endregion
+
+    #region Save fields
     private Save sv = new Save();
     private string path;
+    #endregion
     
-    private void Awake()
+    private void Start()
     {
+        Spawner = GameObject.FindWithTag("Spawner").GetComponent<Spawner>();
+        isFight = false;
         StartFightTrigger = GameObject.FindWithTag("FightPosition");
-        Spawner = GameObject.FindWithTag("Spawner");
-        Enemy = GameObject.FindWithTag("Enemy");
         Time.timeScale = 0;
         Load();
+        if (Player == null)
+        {
+            Player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        }
+        if (Enemy == null)
+        {
+            Enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
+        }
+        maxHpNextEnemy = Enemy.maxHp;
+        attackSpeedNextEnemy = Enemy.attackSpeed;
+        damageNextEnemy = Enemy.damage;
     }
 
     private void Update()
     {
+
         if (HighScore < Score) HighScore=Score;
-        Enemy = GameObject.FindWithTag("Enemy");
-        Player = GameObject.FindWithTag("Player");
     }
 
-    public void ScoreUp()
+    int counter = 0;
+    public void onEnemyDeath()
     {
         Score++;
+        Spawner.Spawn(0);
+        counter++;
+        if (counter == 5) 
+        {
+            EnemyPowerUp();
+            counter = 0;
+        }
     }
 
+    private void EnemyPowerUp()
+    {
+        Debug.Log("Enemy power up");
+        maxHpNextEnemy = Mathf.RoundToInt(maxHpNextEnemy * 1.1f);
+        attackSpeedNextEnemy *= 1.1f;
+        damageNextEnemy = Mathf.RoundToInt(damageNextEnemy * 1.1f);
+    }
+    
+    #region Save/Load
     public void Save()
     {
-        path = Path.Combine(Application.persistentDataPath, "Save.json");
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
-        sv.MaxHpPlayer = player.maxHp;
-        sv.HpPlayer = player.Hp;
-        sv.MaxHpEnemy = enemy.maxHp;
-        sv.HpEnemy = enemy.Hp;
+        path = Path.Combine(Application.dataPath, "Save.json");
+        sv.MaxHpPlayer = Player.maxHp;
+        sv.HpPlayer = Player.Hp;
+        sv.MaxHpEnemy = Enemy.maxHp;
+        sv.HpEnemy = Enemy.maxHp;
         sv.Score = Score;
         sv.HighScore = HighScore;
         File.WriteAllText(path, JsonUtility.ToJson(sv));
@@ -61,16 +97,14 @@ public class GameManager : MonoBehaviour
 
     public void Load()
     {
-        path = Path.Combine(Application.persistentDataPath, "Save.json");
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
+        path = Path.Combine(Application.dataPath, "Save.json");
         if (File.Exists(path))
         {
             sv = JsonUtility.FromJson<Save>(File.ReadAllText(path));
-            player.maxHp = sv.MaxHpPlayer;
-            player.Hp = sv.HpPlayer;
-            enemy.maxHp = sv.MaxHpEnemy;
-            enemy.Hp = sv.HpEnemy;
+            Player.maxHp = sv.MaxHpPlayer;
+            Player.Hp = sv.HpPlayer;
+            Enemy.maxHp = sv.MaxHpEnemy;
+            Enemy.HpEnemy = sv.HpEnemy;
             Score = sv.Score;
             HighScore = sv.HighScore;
             if(isFight)
@@ -78,10 +112,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            sv.MaxHpPlayer = player.maxHp;
-            sv.HpPlayer = player.maxHp;
-            sv.MaxHpEnemy = enemy.maxHp;
-            sv.HpEnemy = enemy.maxHp;
+            sv.MaxHpPlayer = Player.maxHp;
+            sv.HpPlayer = Player.maxHp;
+            sv.MaxHpEnemy = Enemy.maxHp;
+            sv.HpEnemy = Enemy.maxHp;
             sv.Score = 0;
             HighScore = 0;
         }
@@ -89,22 +123,20 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        path = Path.Combine(Application.persistentDataPath, "Save.json");
-        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
-        MaxHpPlayer = player.maxHp;
-        HpPlayer = player.maxHp;
-        MaxHpEnemy = enemy.maxHp;
-        HpEnemy = enemy.maxHp;
-        player.Hp = player.maxHp;
-        Score = 0;
+        path = Path.Combine(Application.dataPath, "Save.json");
+        // MaxHpPlayer = Player.maxHp;
+        // HpPlayer = Player.maxHp;
+        // MaxHpEnemy = Enemy.maxHp;
+        // HpEnemy = Enemy.maxHp;
+        // Player.Hp = Player.maxHp;
+        // Score = 0;
+        sv.MaxHpPlayer = Player.maxHp;
+        sv.HpPlayer = Player.maxHp;
+        sv.MaxHpEnemy = Enemy.maxHp;
+        sv.HpEnemy = Enemy.maxHp;
+        sv.Score = 0;
         File.WriteAllText(path, JsonUtility.ToJson(sv));
-        var plaerTr = player.gameObject.transform.position;
-        Destroy(enemy.gameObject);
-        Destroy(player.gameObject);
-        GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Spawner.GetComponent<Spawner>().Spawn(0);
-        GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Spawner.GetComponent<Spawner>().PlayerRespawn();
-        isFight = false;
+        SceneManager.LoadScene(0);
     }
 
     private void OnApplicationPause(bool pauseStatus)
@@ -117,6 +149,7 @@ public class GameManager : MonoBehaviour
     {
         Save();
     }
+    #endregion
 }
 
 [Serializable]

@@ -9,12 +9,12 @@ public class Enemy : MonoBehaviour
     public int damage;
     public float spawnSpeed;
 
-    public int Hp;
+    public int HpEnemy;
     
     [Space]
     public MeshRenderer _meshRenderer;
     public Material hitEffectMaterial;
-    private Material _origMaterial;
+    public Material _origMaterial;
 
     [Space]
     public Animator _animator;
@@ -26,27 +26,22 @@ public class Enemy : MonoBehaviour
     
     public EnemyState _enemyState { get; set; }
     private GameManager GameManager;
-    private GameController GameController;
-    
+
 
     #region Unity methods
     public void Start()
     {
-        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-        GameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
-        
-        maxHp = GameController.maxHpEnemy;
-        attackSpeed = GameController.attackSpeedEnemy;
-        damage = GameController.damageEnemy;
-        spawnSpeed = GameController.spawnSpeedEnemy;
-        
-        _origMaterial = _meshRenderer.material;
-        Hp = maxHp;
+        maxHp = GameManager.maxHpNextEnemy;
+        attackSpeed = GameManager.attackSpeedNextEnemy;
+        damage = GameManager.damageNextEnemy;
+        _origMaterial = _meshRenderer.materials[0];
+        HpEnemy = GameManager.maxHpNextEnemy;
         _enemyState = EnemyState.Spawn;
     }
     private void Update()
     {
-        HpBarFillEnemy.fillAmount = (float)Hp / (float)maxHp;
+        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        HpBarFillEnemy.fillAmount = (float)HpEnemy / (float)maxHp;
     }
 
     private void FixedUpdate()
@@ -87,11 +82,11 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         StartCoroutine(HitEffect());
-        Hp -= dmg;
-        if (Hp <= 0)
+        HpEnemy -= dmg;
+        if (HpEnemy <= 0)
         {
-            Destroy(gameObject);
-            GameController.onEnemyDeath();
+            GameManager.onEnemyDeath();
+            Destroy(this.gameObject);
         } 
     }
     #endregion

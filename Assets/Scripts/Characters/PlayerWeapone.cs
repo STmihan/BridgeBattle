@@ -2,13 +2,13 @@
 
 public class PlayerWeapone : MonoBehaviour
 {
+    private GameManager GameManager;
     private void OnTriggerEnter(Collider other)
     {
-        var player = GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Player.GetComponent<Player>();
-        var enemy = GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Enemy.GetComponent<Enemy>();
-        if (other.CompareTag("EnemyTrigger") && player.PlayerState == PlayerState.Fight)
+        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        if (other.CompareTag("EnemyTrigger") && GameManager.Player.PlayerState == PlayerState.Fight)
         {
-            enemy.TakeDamage(player.damage);
+            GameManager.Enemy.TakeDamage(GameManager.Player.damage);
         }
     }
 }

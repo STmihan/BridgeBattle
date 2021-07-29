@@ -2,14 +2,14 @@
 
 public class EnemyWeapone : MonoBehaviour
 {
+    private GameManager GameManager;
     private void OnTriggerEnter(Collider other)
     {
-        var player = GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Player.GetComponent<Player>();
-        var enemy = GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Enemy.GetComponent<Enemy>();
+        GameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         if (other.CompareTag("PlayerTrigger"))
         {
             Debug.Log("Enemy attacked");
-            player.TakeDamage(enemy.damage);
+            GameManager.Player.TakeDamage(GameManager.Enemy.damage);
         }
     }
 }

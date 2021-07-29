@@ -4,12 +4,11 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    #region Fields
-
+    #region Inspector fields
     public int maxHp;
     public float attackSpeed;
     public int damage;
-
+    
     [Space]
     [SerializeField] private Material hitEffectMaterial;
     [SerializeField] private GameObject shield;
@@ -21,15 +20,18 @@ public class Player : MonoBehaviour
     
     [Space]
     public Image HpBarFillPlayer;
+    #endregion
 
+    #region Потом убрать из инспектора
     public int Hp;
-    public PlayerState PlayerState { get; set; }
-    
-    private bool isBlocking;
+    public PlayerState PlayerState;
     #endregion
     
+    private bool isBlocking;
+    public GameManager GameManager;
+
     #region Unity methods
-    private void Awake()
+    private void Start()
     {
         PlayerState = PlayerState.Idle;
         Hp = maxHp;
@@ -37,11 +39,12 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        GameManager = GameObject.FindWithTag("GameManager").gameObject.GetComponent<GameManager>();
         PlayerAnimator.SetFloat("AttackSpeed", attackSpeed);
         if (Hp <= 0)
         {
             Destroy(gameObject);
-            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().isFight = false;
+            GameManager.isFight = false;
         }
         HpBarFillPlayer.fillAmount = (float)Hp / (float)maxHp;
     }
@@ -57,7 +60,7 @@ public class Player : MonoBehaviour
         {
             if (PlayerState == PlayerState.Fight)
             {
-                GameObject.FindWithTag("GameManager").GetComponent<GameManager>().isFight = true;
+                GameManager.isFight = true;
                 PlayerAnimator.SetTrigger("AttackTrigger");
                     nextFireTime = Time.time + 1f/attackSpeed;
             }
